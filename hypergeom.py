@@ -6,8 +6,15 @@ Ryan Bressler, Institute for Systems Biology
 Simple script and functions for doing hypergeometric testing against gene sets in a gmt file from the broad:
 http://www.broadinstitute.org/gsea/downloads.jsp
 
+Commanly used with kegg pathways:
+http://www.broadinstitute.org/gsea/msigdb/download_file.jsp?filePath=/resources/msigdb/4.0/c2.cp.kegg.v4.0.symbols.gmt
+
 Comand line usage:
 hypergeom.py genes.txt backgroundgenes.txt pathwaydb.gmt
+
+Start As a tornado webservice Service on port 8000:
+
+hypergeom.py 8000 pathwaydb.gmt
 
 Where the txt files are whitespace sperated lists of the same symbols used in the gmt.
 
@@ -86,11 +93,32 @@ def enrich(inputgenes,backgroundgenes,dbfilename,verbose=False,returnn=20):
 		sortedarray.append([names[i],links[i],probs[i]])
 	return sortedarray
 	
+def startTornado(port,pathwaydb):
+	import tornado.ioloop
+	import tornado.web
+	class MainHandler(tornado.web.RequestHandler):
+		def get(self):
+			self.write("Hello, world")
+	application = tornado.web.Application([
+		(r"/", MainHandler),
+	])
+	application.listen(port)
+	tornado.ioloop.IOLoop.instance().start()
 
 def main():
-	genes = loadList(sys.argv[1])
-	background = loadList(sys.argv[2])
-	enrich(genes,background,sys.argv[3],verbose=True)
+	if len(sys.argv) == 3:
+		startTornado(sys.argv[1],sys.argv[2])
+	elif len(sys.argv) == 4:
+		genes = loadList(sys.argv[1])
+		background = loadList(sys.argv[2])
+		enrich(genes,background,sys.argv[3],verbose=True)
+	else:
+		print '''Comand line usage:
+	hypergeom.py genes.txt backgroundgenes.txt pathwaydb.gmt
+
+	Start As a tornado webservice Service on port 8000:
+
+	hypergeom.py 8000 pathwaydb.gmt'''
 
 if __name__ == '__main__':
 	main()
