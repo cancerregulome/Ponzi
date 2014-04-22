@@ -114,16 +114,20 @@ def startTornado(port,dbfilename):
 	import tornado.web
 	class MainHandler(tornado.web.RequestHandler):
 		def post(self):
-			background = backgroundgenes
-			args = json.loads(self.get_argument("genelist"))
+			background = defaultbackground
+			args = json.loads(self.get_argument("genelists"))
 
 			if "background" in args  and len(args["background"])!=0:
 				background = np.unique(args["background"])
 
+			total= len(background)
+
 			replydata = {}
 			for setname in args["lists"]:
-				genes = np.uniue(args["lists"][setname])
+				genes = np.unique(args["lists"][setname])
 
+				ntrys = len(genes)
+	
 				names =[]
 				links =[]
 				probs =[]
@@ -137,7 +141,8 @@ def startTornado(port,dbfilename):
 						links.append(pathway["link"])
 						probs.append(prob)
 				sortedarray = []
-				for i in  np.argsort(np.array(probs))[0:returnn]:
+				#for i in  np.argsort(np.array(probs))[0:returnn]:
+				for i in  np.argsort(np.array(probs)):
 					sortedarray.append({"name":names[i],"link":links[i],"p":probs[i]})
 				replydata[setname]=sortedarray
 
