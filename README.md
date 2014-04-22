@@ -19,8 +19,8 @@ Send a Post Request With the Following in the genelists field:
 {"lists":{
 	"list1":["gene1","gene2"]
 	"list2":["gene1","gene2","gene3"]
-	}}
-"background":["gene1","gene2","gene2","gene4"]
+	}
+"background":["gene1","gene2","gene2","gene4"]}
 ```
 
 Use the same gene identifiers as in the gmt.
@@ -29,8 +29,8 @@ If background is missing or of zero length all genes in the gmt will be used as 
 Recieve a sorted list of patheways/genesets like the following:
 
 ```json
-[{"name":"PATHWAY1","link":"http://moreinfo1","p":.1},
-{"name":"PATHWAY2","link":"http://moreinfo2","p":.2},
+[{"name":"PATHWAY1","link":"http://moreinfo1","p":0.1},
+{"name":"PATHWAY2","link":"http://moreinfo2","p":0.2},
 ...]
 ```
 
