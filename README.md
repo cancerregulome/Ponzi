@@ -14,7 +14,7 @@ http://www.broadinstitute.org/gsea/msigdb/download_file.jsp?filePath=/resources/
 
 This data will be held in memory for effichent computation.
 
-If you wish to provide your own data the format is essentially a tsv where each row represents a pathway. The first field is the name of the pathways/geneset, the second is a link or description and the remaining fields contain the gene identifiers:
+If you wish to provide your own data, the format is essentially a tsv where each row represents a pathway. The first field is the name of the pathways/geneset, the second is a link or description and the remaining fields contain the gene identifiers:
 
 ```
 PATHWAY1	http://moreinfo1	gene1	gene2
@@ -28,7 +28,7 @@ This service requires:
 * [TornadoWeb](http://www.tornadoweb.org/)
 * [Numpy](http://www.numpy.org/)
 
-Ussage as Webservice
+Ussage as a Webservice
 --------------------
 
 Start running on port 8000 useing pathwaydb.gmt:
@@ -37,7 +37,7 @@ Start running on port 8000 useing pathwaydb.gmt:
 hypergeom.py 8000 pathwaydb.gmt
 ```
 
-Send a Post Request with the following in the genelists field:
+Send a Post Request with the following in the "genelists" form field:
 
 ```json
 {
@@ -62,9 +62,9 @@ Send a Post Request with the following in the genelists field:
 ```
 
 Use the same gene identifiers as in the gmt.
-If background is missing or of zero length all genes in the gmt will be used as the background.
+If the background genes list is missing or of zero length all genes in the gmt will be used as the background.
 
-Recieve a sorted list of pathways/genesets like the following:
+Recieve sorted lists of pathways/genesets like the following:
 
 ```json
 {
@@ -93,7 +93,7 @@ Recieve a sorted list of pathways/genesets like the following:
 Testing and Benchmarking
 ------------------------
 
-The script testquery.py can be used to benchmark and test the service by querying for each of pathways in the source gmt. It will report the time elapsed for each query and the number of correctelly identified pathways. The service should correctelly identify KEGG pathways in about .04 seconds per single list request.
+The script testquery.py can be used to benchmark and test the service by querying for each of pathways in the source gmt. It will report the time elapsed for each query, the total time and the number of correctelly identified pathways. The service should correctelly identify all KEGG pathways in about .04 seconds per (single list) request.
 
 ```
 $ testquery.py http://localhost:8000 c2.cp.kegg.v4.0.symbols.gmt 
