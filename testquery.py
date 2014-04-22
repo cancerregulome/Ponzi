@@ -24,9 +24,8 @@ def main():
 		requestdata=urllib.urlencode({"genelists":json.dumps({"lists":{"list1":setgenes}})})
 		start = time.time()
 		result = urllib2.urlopen(url,requestdata)
-		delta = time.time()-start,
 
-		print "Request took ",  delta #, " got :\n", result.read()
+		print "Request for", vs[0],"took ",  time.time()-start #, " got :\n", result.read()
 		requests += 1
 		if vs[0]==json.load(result)["list1"][0]["name"]:
 			corect +=1
