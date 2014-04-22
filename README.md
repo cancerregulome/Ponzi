@@ -1,11 +1,35 @@
 Ponzi
 =====
 
-A get (en)rich(ed) quick service.
+A get (en)rich(ed) quick web service for hypergeometric gene set analysis.
 
 
-(Proposed) Usage as A Webservice
-----------------------
+Data
+----
+On start up this service will load a gene set database from a [Gene Matrix Transpose (GMT)](http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29) file like the ones the broad provides for use with GSEA (licensing restrictions apply to this data):
+http://www.broadinstitute.org/gsea/downloads.jsp
+
+It is commanly used with kegg pathways:
+http://www.broadinstitute.org/gsea/msigdb/download_file.jsp?filePath=/resources/msigdb/4.0/c2.cp.kegg.v4.0.symbols.gmt
+
+This data will be held in memory for effichent computation.
+
+If you wish to provide your own data the format is essentially a tsv where each row represents a pathway. The first field is the name of the pathways/geneset, the second is a link or description and the remaining fields contain the gene identifiers
+
+```
+PATHWAY1	http://moreinfo1	gene1	gene2
+PATHWAY2	http://moreinfo2	gene2	gene3	gene4
+```
+
+Dependencies
+------------
+This service requires:
+* [python2.7](https://www.python.org/)
+* [TornadoWeb](http://www.tornadoweb.org/)
+* [Numpy](http://www.numpy.org/)
+
+Ussage as Webservice
+--------------------
 
 Start running on port 8000 useing pathwaydb.gmt:
 
