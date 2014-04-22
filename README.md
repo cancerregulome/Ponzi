@@ -30,7 +30,6 @@ Recieve a sorted list of patheways/genesets like the following:
 
 ```json
 [{"name":"PATHWAY1","link":"http://moreinfo1","p":0.1},
-{"name":"PATHWAY2","link":"http://moreinfo2","p":0.2},
-...]
+{"name":"PATHWAY2","link":"http://moreinfo2","p":0.2}]
 ```
 

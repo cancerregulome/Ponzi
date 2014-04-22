@@ -25,6 +25,7 @@ obseved as occured in the input set. Ie 1-CFF(n-1) where n is the number of gene
 
 
 """
+import json
 import numpy as np
 import sys
 from scipy.stats import hypergeom
@@ -93,12 +94,57 @@ def enrich(inputgenes,backgroundgenes,dbfilename,verbose=False,returnn=20):
 		sortedarray.append([names[i],links[i],probs[i]])
 	return sortedarray
 	
-def startTornado(port,pathwaydb):
+def startTornado(port,dbfilename):
+	#load needed data into memory
+	pathways = []
+	defaultbackground = []
+
+	gmtDB = open(dbfilename)
+	for line in gmtDB:
+		vs=line.rstrip().split("\t")
+		setgenes=np.array(vs[2:])
+		pathways.append({"name":vs[0],"link":vs[1],"genes":setgenes})
+		defaultbackground.extend(setgenes)
+	gmtDB.close()
+
+	defaultbackground = np.unique(defaultbackground)
+
+
 	import tornado.ioloop
 	import tornado.web
 	class MainHandler(tornado.web.RequestHandler):
-		def get(self):
-			self.write("Hello, world")
+		def post(self):
+			background = backgroundgenes
+			args = json.loads(self.get_argument("genelist"))
+
+			if "background" in args  and len(args["background"])!=0:
+				background = np.unique(args["background"])
+
+			replydata = {}
+			for setname in args["lists"]:
+				genes = np.uniue(args["lists"][setname])
+
+				names =[]
+				links =[]
+				probs =[]
+				for pathway in pathways:
+					setgenes=pathway["genes"]
+					nfound = np.sum(np.in1d(genes,setgenes,assume_unique=True))
+					if nfound > 1:
+						npresent = np.sum(np.in1d(setgenes,background,assume_unique=True))
+						prob = hypergeom.sf(nfound-1,total,npresent,ntrys)
+						names.append(pathway["name"])
+						links.append(pathway["link"])
+						probs.append(prob)
+				sortedarray = []
+				for i in  np.argsort(np.array(probs))[0:returnn]:
+					sortedarray.append({"name":names[i],"link":links[i],"p":probs[i]})
+				replydata[setname]=sortedarray
+
+			json.dump(replydata, self)
+
+
+
 	application = tornado.web.Application([
 		(r"/", MainHandler),
 	])
@@ -114,11 +160,11 @@ def main():
 		enrich(genes,background,sys.argv[3],verbose=True)
 	else:
 		print '''Comand line usage:
-	hypergeom.py genes.txt backgroundgenes.txt pathwaydb.gmt
+hypergeom.py genes.txt backgroundgenes.txt pathwaydb.gmt
 
-	Start As a tornado webservice Service on port 8000:
+Start As a tornado webservice Service on port 8000:
 
-	hypergeom.py 8000 pathwaydb.gmt'''
+hypergeom.py 8000 pathwaydb.gmt'''
 
 if __name__ == '__main__':
 	main()
