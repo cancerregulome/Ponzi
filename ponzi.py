@@ -12,7 +12,7 @@ http://www.broadinstitute.org/gsea/msigdb/download_file.jsp?filePath=/resources/
 
 Start As a tornado webservice Service on port 8000:
 
-hypergeom.py 8000 pathwaydb.gmt
+ponzi.py 8000 pathwaydb.gmt
 
 
 See README.md for API.

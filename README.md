@@ -35,7 +35,7 @@ Usage as a Webservice
 Start running on port 8000 using pathwaydb.gmt:
 
 ```bash
-hypergeom.py 8000 pathwaydb.gmt
+ponzi.py 8000 pathwaydb.gmt
 ```
 
 ### Post gene lists ###
