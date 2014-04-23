@@ -1,12 +1,15 @@
 Ponzi
 =====
 
-A get enriched quick web service for hypergeometric gene set/pathway over representation analysis.
+A get enriched quick web service for hypergeometric gene set/pathway 
+over representation analysis.
 
 
 Data
 ----
-On start up this service will load a gene set database from a [Gene Matrix Transpose (GMT)](http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29) file like the ones the broad provides for use with GSEA (licensing restrictions apply to this data):
+On start up this service will load a gene set database from a [
+Gene Matrix Transpose (GMT)](http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29) 
+file like the ones the broad provides for use with GSEA (licensing restrictions apply to this data):
 http://www.broadinstitute.org/gsea/downloads.jsp
 
 It is commonly used with kegg pathways:
@@ -14,7 +17,10 @@ http://www.broadinstitute.org/gsea/msigdb/download_file.jsp?filePath=/resources/
 
 This data will be held in memory for efficient computation.
 
-If you wish to provide your own data, the format is essentially a tsv where each row represents a pathway. The first field is the name of the pathways/geneset, the second is a link or description and the remaining fields contain the gene identifiers:
+If you wish to provide your own data, the format is essentially a 
+tsv where each row represents a pathway. The first field is the name 
+of the pathways/geneset, the second is a link or description and the 
+remaining fields contain the gene identifiers:
 
 ```
 PATHWAY1	http://moreinfo1	gene1	gene2
@@ -38,8 +44,9 @@ Start running on port 8000 using pathwaydb.gmt:
 ponzi.py 8000 pathwaydb.gmt
 ```
 
-### Post gene lists ###
-Send a Post Request with json resembling the following in the "genelists" form field:
+### Posting Gene Lists ###
+To submit lists for analysis send a http POST Request with json 
+resembling the following in the "genelists" form field:
 
 ```json
 {
@@ -63,12 +70,16 @@ Send a Post Request with json resembling the following in the "genelists" form f
 }
 ```
 
-The lists should use the same identifiers as used in gmt. They are considered unordered and repeats elements will be removed before analysis.
+The lists should use the same identifiers as used in gmt. They 
+are considered unordered and repeated elements will be removed before 
+analysis.
 
-If the background genes list is missing or of zero length all genes in the gmt will be used as the background.
+If the background genes list is missing or of zero length all genes in 
+the gmt will be used as the background.
 
 ### Results ###
-The response will contain json containing sorted lists of pathways/genesets like the following:
+The response will contain json containing sorted lists of pathways/genesets 
+like the following:
 
 ```json
 {
@@ -93,12 +104,17 @@ The response will contain json containing sorted lists of pathways/genesets like
 	}
 }
 ```
-Where p is the probability that there would be at least as much overlap between the lists as was observed and is not corrected for multiple testing.
+Where p is the probability that there would be at least as much overlap 
+between the lists as was observed and is not corrected for multiple testing.
 
 Testing and Benchmarking
 ------------------------
 
-The script testquery.py can be used to benchmark and test the service by querying for each of pathways in the source gmt. It will report the time elapsed for each query, the total time and the number of correctly identified pathways. The service should correctly identify all KEGG pathways in about .04 seconds per (single list) request round trip.
+The script testquery.py can be used to benchmark and test the service 
+by querying for each of pathways in the source gmt. It will report the 
+time elapsed for each query, the total time and the number of correctly 
+identified pathways. The service should correctly identify all KEGG pathways 
+in about .04 seconds per (single list) request round trip.
 
 ```
 $ testquery.py http://localhost:8000 c2.cp.kegg.v4.0.symbols.gmt 
