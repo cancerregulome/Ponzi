@@ -24,7 +24,7 @@ import sys
 from scipy.stats import hypergeom
 import tornado.ioloop
 import tornado.web
-
+import tornado.escape
 	
 def startTornado(port,dbfilename):
 	#load needed data into memory
@@ -46,8 +46,12 @@ def startTornado(port,dbfilename):
 	class MainHandler(tornado.web.RequestHandler):
 		def post(self):
 			background = defaultbackground
-			args = json.loads(self.get_argument("genelists"))
-
+			try:
+				args = tornado.escape.json_decode(self.request.body) 
+			except ValueError:
+				self.clear()
+				self.set_status(400)
+				self.finish("<html><head><title>400 Bad Request</title></head><body>Malformed JSON object in POST body.</body></html>")
 			if "background" in args  and len(args["background"])!=0:
 				background = np.unique(args["background"])
 
