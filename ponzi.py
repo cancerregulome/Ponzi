@@ -81,7 +81,7 @@ def startTornado(port,dbfilename):
 					sortedarray.append({"name":names[i],"link":links[i],"p":probs[i]})
 				replydata[setname]=sortedarray
 
-			json.dump(replydata, self)
+			json.dump({'results': replydata}, self)
 
 
 
